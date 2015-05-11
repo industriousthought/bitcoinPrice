@@ -1,0 +1,51 @@
+<html>
+
+    <head>
+    </head>
+
+    <body>
+
+        <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="./scripts/jquery.csv-0.71.min.js"></script>
+        <script src="http://code.highcharts.com/highcharts.js"></script>
+        <script src="http://code.highcharts.com/modules/data.js"></script>
+        <script src="http://code.highcharts.com/modules/exporting.js"></script>
+
+        <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+        <script>
+
+            $(function () {
+                $.get('https://api.bitcoinaverage.com/history/USD/per_minute_24h_sliding_window.csv', function(csv) {
+                    var data = $.csv.toArrays(csv);
+                    data = data.slice(0, 1).concat(data.slice(-173));
+                    csv = '';
+                    for (var i = 0; i < data.length; i++) {
+                        csv += data[i][0] + ',' + data[i][1] + '\n';
+                    };
+                    $('#container').highcharts({
+                        data: {
+                            csv: csv
+                        },
+                        title: {
+                            text: 'Bitcoin Price Visualization',
+                            x: -20 //center
+                        },
+                        subtitle: {
+                            text: 'Last Four Hours',
+                            x: -20
+                        },
+                        plotOptions: {
+                            series: {
+                                marker: {
+                                    enabled: false
+                                }
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+
+</html>
